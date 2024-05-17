@@ -33,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const favoriteButton = document.createElement('button');
       favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
       favoriteButton.classList.add('btn', 'favorite');
+      favoriteButton.addEventListener('click', () => {
+        favoriteButton.classList.toggle('active');
+      });
       songInfo.appendChild(favoriteButton);
       listItem.appendChild(songInfo);
       likedSongsList.appendChild(listItem);
@@ -71,12 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
     addLikedSong(currentSong);
     fetchRandomSong();
-    likeButton.classList.add('animated');
+    songCard.classList.add('animated');
   }
 
   function dislikeSong() {
     fetchRandomSong();
-    dislikeButton.classList.add('animated');
+    songCard.classList.add('animated');
   }
 
   function addLikedSong(song) {
@@ -90,6 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const favoriteButton = document.createElement('button');
     favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
     favoriteButton.classList.add('btn', 'favorite');
+    favoriteButton.addEventListener('click', () => {
+      favoriteButton.classList.toggle('active');
+    });
     songInfo.appendChild(favoriteButton);
     listItem.appendChild(songInfo);
     likedSongsList.appendChild(listItem);
@@ -142,11 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
   hammer.on('swipe', handleSwipe);
 
   // Remove animation class after animation ends
-  likeButton.addEventListener('animationend', () => {
-    likeButton.classList.remove('animated');
-  });
-
-  dislikeButton.addEventListener('animationend', () => {
-    dislikeButton.classList.remove('animated');
+  songCard.addEventListener('animationend', () => {
+    songCard.classList.remove('animated');
   });
 });
