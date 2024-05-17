@@ -7,9 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const songNameElement = document.getElementById('song-name');
   const songArtistElement = document.getElementById('song-artist');
+  const songArtElement = document.getElementById('song-art');
   const likeButton = document.getElementById('like-button');
   const dislikeButton = document.getElementById('dislike-button');
   const likedSongsList = document.getElementById('liked-songs-list');
+  const songCard = document.getElementById('song-card');
 
   let currentSong = null;
   let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
@@ -19,7 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
     likedSongsList.innerHTML = '';
     likedSongs.forEach(song => {
       const listItem = document.createElement('li');
-      listItem.textContent = `${song.name} by ${song.artist}`;
+      const img = document.createElement('img');
+      img.src = song.art;
+      listItem.appendChild(img);
+      listItem.appendChild(document.createTextNode(`${song.name} by ${song.artist}`));
       likedSongsList.appendChild(listItem);
     });
   }
@@ -37,10 +42,14 @@ document.addEventListener('DOMContentLoaded', () => {
       currentSong = {
         name: randomTrack.name,
         artist: randomTrack.artists[0].name,
+        art: randomTrack.album.images[0].url,
         spotifyId: randomTrack.id
       };
       songNameElement.textContent = currentSong.name;
       songArtistElement.textContent = currentSong.artist;
+      songArtElement.src = currentSong.art;
+      songCard.style.transform = 'translateX(0)';
+      songCard.style.opacity = '1';
     } catch (error) {
       console.error('Error fetching song:', error);
       alert('Error fetching song. Please try again.');
@@ -56,20 +65,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function addLikedSong(song) {
     const listItem = document.createElement('li');
-    listItem.textContent = `${song.name} by ${song.artist}`;
+    const img = document.createElement('img');
+    img.src = song.art;
+    listItem.appendChild(img);
+    listItem.appendChild(document.createTextNode(`${song.name} by ${song.artist}`));
     likedSongsList.appendChild(listItem);
   }
 
   function handleSwipe(event) {
     if (event.direction === 4) { // Swipe right
-      likeSong();
+      songCard.style.transform = 'translateX(100vw)';
+      songCard.style.opacity = '0';
+      setTimeout(likeSong, 300);
     } else if (event.direction === 2) { // Swipe left
-      fetchRandomSong();
+      songCard.style.transform = 'translateX(-100vw)';
+      songCard.style.opacity = '0';
+      setTimeout(fetchRandomSong, 300);
     }
   }
 
-  likeButton.addEventListener('click', likeSong);
-  dislikeButton.addEventListener('click', fetchRandomSong);
+  likeButton.addEventListener('click', () => {
+    songCard.style.transform = 'translateX(100vw)';
+    songCard.style.opacity = '0';
+    setTimeout(likeSong, 300);
+  });
+
+  dislikeButton.addEventListener('click', () => {
+    songCard.style.transform = 'translateX(-100vw)';
+    songCard.style.opacity = '0';
+    setTimeout(fetchRandomSong, 300);
+  });
 
   function handleAuth() {
     const hash = window.location.hash;
@@ -90,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
   handleAuth();
 
   // Initialize Hammer.js for swipe gestures
-  const songCard = document.getElementById('song-card');
   const hammer = new Hammer(songCard);
   hammer.on('swipe', handleSwipe);
 });
