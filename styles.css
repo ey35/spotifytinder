@@ -166,6 +166,33 @@ body {
   z-index: 1; /* Ensure it's above other elements */
 }
 
+/* Adjust the styling for the favorite button */
+.favorite {
+  background-color: transparent;
+  border: none;
+  color: #777;
+}
+
+.favorite:hover {
+  color: orange;
+}
+
+/* Add animation for swiping */
+#song-card.animated {
+  animation: swipeAnimation 0.3s ease;
+}
+
+@keyframes swipeAnimation {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
 #view-liked-songs:hover {
   background-color: #1aa34a;
 }
