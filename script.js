@@ -1,9 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
   const CLIENT_ID = '32e9e5d5c4d74bf98e34f5e240070726'; // Your Spotify client ID
-  const REDIRECT_URI = window.location.href; // Redirect URI
+  const REDIRECT_URI = 'https://spotifytinder.vercel.app'; // Your redirect URI
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
-  const RESPONSE_TYPE = 'token';
-  const SCOPES = 'user-library-read';
+  const RESPONSE_TYPE = 'code';
+  const SCOPES = 'user-read-private user-read-email';
+
+  const loginButton = document.getElementById('login-button');
+  loginButton.addEventListener('click', handleLogin);
+
+  function handleLogin() {
+    const codeVerifier = generateCodeVerifier();
+    const codeChallenge = generateCodeChallenge(codeVerifier);
+    const state = generateRandomString();
+    const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}&code_challenge=${codeChallenge}&code_challenge_method=S256&state=${state}`;
+    window.location.href = authUrl;
+  }
+
+  function generateCodeVerifier() {
+    // Generate a random string for the code verifier
+    const verifier = [...Array(64)].map(() => Math.random().toString(36)[2]).join('');
+    return verifier;
+  }
+
+  function generateCodeChallenge(codeVerifier) {
+    // Generate the code challenge using SHA256 hashing algorithm
+    const encoder = new TextEncoder();
+    const data = encoder.encode(codeVerifier);
+    return base64URL(CryptoJS.SHA256(data));
+  }
+
+  function generateRandomString() {
+    // Generate a random string for the state parameter
+    const state = [...Array(16)].map(() => Math.random().toString(36)[2]).join('');
+    return state;
+  }
+
+  function base64URL(buffer) {
+    // Convert buffer to base64url string
+    return buffer.toString(CryptoJS.enc.Base64)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=/g, '');
+  }
+});
+
 
   const songNameElement = document.getElementById('song-name');
   const songArtistElement = document.getElementById('song-artist');
