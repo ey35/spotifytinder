@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
   let accessToken = localStorage.getItem('spotifyAccessToken');
   let clientId = localStorage.getItem('spotifyClientId');
 
+  let currentAudio = new Audio(); // Initialize the audio element
+
   function renderLikedSongs() {
     likedSongsList.innerHTML = '';
     likedSongs.forEach(song => {
@@ -56,131 +58,48 @@ document.addEventListener('DOMContentLoaded', () => {
         name: randomTrack.name,
         artist: randomTrack.artists[0].name,
         art: randomTrack.album.images[0].url,
-        spotifyId: randomTrack.id
+        spotifyId: randomTrack.id,
+        preview_url: randomTrack.preview_url
       };
       songNameElement.textContent = currentSong.name;
       songArtistElement.textContent = currentSong.artist;
       songArtElement.src = currentSong.art;
-      songCard.style.transform = 'translateX(0)';
-      songCard.style.opacity = '1';
+      playAudio(currentSong.preview_url);
     } catch (error) {
       console.error('Error fetching song:', error);
       alert('Error fetching song. Please try again.');
     }
   }
 
+  function playAudio(url) {
+    if (currentAudio.src !== url) {
+      currentAudio.pause(); // Pause the current audio
+      currentAudio = new Audio(url);
+      currentAudio.play().catch(error => {
+        console.error('Error playing audio:', error);
+      });
+    }
+  }
+
   function likeSong() {
     likedSongs.push(currentSong);
     localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
-    addLikedSong(currentSong);
+    renderLikedSongs();
     fetchRandomSong();
-    songCard.classList.add('animated');
   }
 
   function dislikeSong() {
     fetchRandomSong();
-    songCard.classList.add('animated');
   }
-
-let currentAudio = null; // Track the currently playing audio
-
-async function fetchRandomSong() {
-  try {
-    const response = await fetch('https://api.spotify.com/v1/recommendations?seed_genres=pop', {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    });
-    const data = await response.json();
-    const tracks = data.tracks;
-    const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
-    currentSong = {
-      name: randomTrack.name,
-      artist: randomTrack.artists[0].name,
-      art: randomTrack.album.images[0].url,
-      spotifyId: randomTrack.id,
-      preview_url: randomTrack.preview_url
-    };
-    songNameElement.textContent = currentSong.name;
-    songArtistElement.textContent = currentSong.artist;
-    songArtElement.src = currentSong.art;
-    songCard.style.transform = 'translateX(0)';
-    songCard.style.opacity = '1';
-    if (currentSong.preview_url) {
-      playAudio(currentSong.preview_url);
-    } else {
-      console.warn('No preview available for this song.');
-    }
-  } catch (error) {
-    console.error('Error fetching song:', error);
-    alert('Error fetching song. Please try again.');
-  }
-}
-
-function playAudio(url) {
-  if (currentAudio) {
-    currentAudio.pause(); // Pause the current audio
-    currentAudio.currentTime = 0; // Reset audio playback position
-  }
-  currentAudio = new Audio(url);
-  currentAudio.play().catch(error => {
-    console.error('Error playing audio:', error);
-    // Handle error, e.g., fetch another song
-  });
-  
-  // Listen for when the audio ends
-  currentAudio.addEventListener('ended', () => {
-    fetchRandomSong(); // Fetch another song when the current one ends
-  });
-}
-
-function likeSong() {
-  likedSongs.push(currentSong);
-  localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
-  addLikedSong(currentSong);
-  fetchRandomSong();
-  songCard.classList.add('animated');
-}
-
-function dislikeSong() {
-  fetchRandomSong();
-  songCard.classList.add('animated');
-}
-
-// Remove animation class after animation ends
-songCard.addEventListener('animationend', () => {
-  songCard.classList.remove('animated');
-});
-
-// Call fetchRandomSong initially to start the music player
-fetchRandomSong();
-
-songCard.addEventListener('animationend', () => {
-  songCard.classList.remove('animated');
-});
-
-
-
-  function handleSwipe(event) {
-    if (event.direction === 4) { // Swipe right
-      likeSong();
-    } else if (event.direction === 2) { // Swipe left
-      dislikeSong();
-    }
-  }
-
-  likeButton.addEventListener('click', likeSong);
-
-  dislikeButton.addEventListener('click', dislikeSong);
 
   viewLikedSongsButton.addEventListener('click', () => {
-    songCard.classList.add('hidden');
     likedSongsContainer.style.display = 'block';
+    songCard.style.display = 'none';
   });
 
   backButton.addEventListener('click', () => {
     likedSongsContainer.style.display = 'none';
-    songCard.classList.remove('hidden');
+    songCard.style.display = 'block';
   });
 
   function handleAuth() {
@@ -202,13 +121,4 @@ songCard.addEventListener('animationend', () => {
   }
 
   handleAuth();
-
-  // Initialize Hammer.js for swipe gestures
-  const hammer = new Hammer(songCard);
-  hammer.on('swipe', handleSwipe);
-
-  // Remove animation class after animation ends
-  songCard.addEventListener('animationend', () => {
-    songCard.classList.remove('animated');
-  });
 });
