@@ -205,6 +205,8 @@ body {
   overflow-y: auto; /* Enable vertical scrolling */
   scrollbar-width: thin; /* Adjust scrollbar width */
   scrollbar-color: #777 transparent; /* Adjust scrollbar color */
+  display: flex; /* Ensure flexbox layout */
+  flex-wrap: wrap; /* Allow items to wrap */
 }
 
 #liked-songs-list::-webkit-scrollbar {
@@ -214,4 +216,11 @@ body {
 #liked-songs-list::-webkit-scrollbar-thumb {
   background-color: #777; /* Adjust scrollbar thumb color for WebKit browsers */
 }
+
+#liked-songs-list li {
+  flex: 0 0 calc(33.33% - 20px); /* Adjust item width */
+  margin: 10px; /* Adjust item margin */
+  text-align: center; /* Center item content */
+}
+
 
