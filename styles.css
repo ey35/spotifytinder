@@ -121,11 +121,11 @@ body {
   background-color: #444;
 }
 /* Adjust the positioning of the Liked Songs button */
+/* Adjust the positioning of the Liked Songs button */
 #view-liked-songs {
   position: absolute;
-  top: 5px; /* Adjust as needed */
-  right: 20px; /* Adjust as needed */
-  down: 20px;
+  top: -30px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
   background-color: #1db954;
   color: white;
   border: none;
@@ -138,4 +138,5 @@ body {
 #view-liked-songs:hover {
   background-color: #1aa34a;
 }
+
 
