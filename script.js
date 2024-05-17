@@ -82,24 +82,24 @@ document.addEventListener('DOMContentLoaded', () => {
     songCard.classList.add('animated');
   }
 
-  function addLikedSong(song) {
-    const listItem = document.createElement('li');
-    const img = document.createElement('img');
-    img.src = song.art;
-    listItem.appendChild(img);
-    const songInfo = document.createElement('div');
-    songInfo.classList.add('song-info');
-    songInfo.innerHTML = `<p>${song.name} by ${song.artist}</p>`;
-    const favoriteButton = document.createElement('button');
-    favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
-    favoriteButton.classList.add('btn', 'favorite');
-    favoriteButton.addEventListener('click', () => {
-      favoriteButton.classList.toggle('active');
-    });
-    songInfo.appendChild(favoriteButton);
-    listItem.appendChild(songInfo);
-    likedSongsList.appendChild(listItem);
-  }
+ function addLikedSong(song) {
+  const listItem = document.createElement('li');
+  const img = document.createElement('img');
+  img.src = song.art;
+  listItem.appendChild(img);
+  const songInfo = document.createElement('div');
+  songInfo.classList.add('song-info');
+  songInfo.innerHTML = `<p>${song.name} by ${song.artist}</p>`;
+  const favoriteButton = document.createElement('button');
+  favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
+  favoriteButton.classList.add('btn', 'favorite');
+  favoriteButton.addEventListener('click', () => {
+    favoriteButton.classList.toggle('active');
+  });
+  songInfo.appendChild(favoriteButton);
+  listItem.appendChild(songInfo);
+  likedSongsList.appendChild(listItem);
+}
 
   function handleSwipe(event) {
     if (event.direction === 4) { // Swipe right
