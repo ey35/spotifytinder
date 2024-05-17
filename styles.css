@@ -199,3 +199,19 @@ body {
     opacity: 0;
   }
 }
+
+/* Adjust the styling for the liked songs list container */
+#liked-songs-list {
+  overflow-y: auto; /* Enable vertical scrolling */
+  scrollbar-width: thin; /* Adjust scrollbar width */
+  scrollbar-color: #777 transparent; /* Adjust scrollbar color */
+}
+
+#liked-songs-list::-webkit-scrollbar {
+  width: 8px; /* Adjust scrollbar width for WebKit browsers */
+}
+
+#liked-songs-list::-webkit-scrollbar-thumb {
+  background-color: #777; /* Adjust scrollbar thumb color for WebKit browsers */
+}
+
