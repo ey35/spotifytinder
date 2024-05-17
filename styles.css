@@ -207,6 +207,8 @@ body {
   scrollbar-color: #777 transparent; /* Adjust scrollbar color */
   display: flex; /* Ensure flexbox layout */
   flex-wrap: wrap; /* Allow items to wrap */
+  justify-content: center; /* Center items horizontally */
+  align-items: flex-start; /* Align items to the top */
 }
 
 #liked-songs-list::-webkit-scrollbar {
@@ -222,5 +224,22 @@ body {
   margin: 10px; /* Adjust item margin */
   text-align: center; /* Center item content */
 }
+
+.song-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.favorite {
+  background-color: transparent;
+  border: none;
+  color: #777;
+}
+
+.favorite.active {
+  color: orange;
+}
+
 
 
