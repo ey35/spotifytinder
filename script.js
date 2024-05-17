@@ -120,10 +120,17 @@ async function fetchRandomSong() {
 function playAudio(url) {
   if (currentAudio) {
     currentAudio.pause(); // Pause the current audio
+    currentAudio.currentTime = 0; // Reset audio playback position
   }
   currentAudio = new Audio(url);
   currentAudio.play().catch(error => {
     console.error('Error playing audio:', error);
+    // Handle error, e.g., fetch another song
+  });
+  
+  // Listen for when the audio ends
+  currentAudio.addEventListener('ended', () => {
+    fetchRandomSong(); // Fetch another song when the current one ends
   });
 }
 
@@ -141,6 +148,13 @@ function dislikeSong() {
 }
 
 // Remove animation class after animation ends
+songCard.addEventListener('animationend', () => {
+  songCard.classList.remove('animated');
+});
+
+// Call fetchRandomSong initially to start the music player
+fetchRandomSong();
+
 songCard.addEventListener('animationend', () => {
   songCard.classList.remove('animated');
 });
