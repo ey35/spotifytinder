@@ -173,8 +173,15 @@ body {
   color: #777;
 }
 
-.favorite:hover {
+.favorite.active {
   color: orange;
+}
+
+/* Align the favorite button */
+.song-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Add animation for swiping */
@@ -191,8 +198,4 @@ body {
     transform: translateX(100%);
     opacity: 0;
   }
-}
-
-#view-liked-songs:hover {
-  background-color: #1aa34a;
 }
