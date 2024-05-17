@@ -1,8 +1,22 @@
+// JavaScript code for Spotify login
 document.addEventListener('DOMContentLoaded', () => {
-  const REDIRECT_URI = window.location.href;
+  const CLIENT_ID = '32e9e5d5c4d74bf98e34f5e240070726'; // Your Spotify client ID
+  const REDIRECT_URI = window.location.href; // Redirect URI
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
   const RESPONSE_TYPE = 'token';
   const SCOPES = 'user-library-read';
+
+  // Function to initiate Spotify login
+  function handleLogin() {
+    const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
+    window.location.href = authUrl;
+  }
+
+  // Add event listener to the login button
+  const loginButton = document.getElementById('login-button');
+  loginButton.addEventListener('click', handleLogin);
+});
+
 
   const songNameElement = document.getElementById('song-name');
   const songArtistElement = document.getElementById('song-artist');
