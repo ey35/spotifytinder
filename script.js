@@ -66,4 +66,56 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchRandomSong();
   }
 
-  function addLikedSong(song
+  function addLikedSong(song) {
+    const listItem = document.createElement('li');
+    const img = document.createElement('img');
+    img.src = song.art;
+    listItem.appendChild(img);
+    listItem.appendChild(document.createTextNode(`${song.name} by ${song.artist}`));
+    likedSongsList.appendChild(listItem);
+  }
+
+  function handleSwipe(event) {
+    if (event.direction === 4) { // Swipe right
+      likeSong();
+    } else if (event.direction === 2) { // Swipe left
+      fetchRandomSong();
+    }
+  }
+
+  likeButton.addEventListener('click', likeSong);
+
+  dislikeButton.addEventListener('click', fetchRandomSong);
+
+  viewLikedSongsButton.addEventListener('click', () => {
+    songCard.classList.add('hidden');
+    likedSongsContainer.style.display = 'block';
+  });
+
+  backButton.addEventListener('click', () => {
+    likedSongsContainer.style.display = 'none';
+    songCard.classList.remove('hidden');
+  });
+
+  function handleAuth() {
+    const hash = window.location.hash;
+    if (!accessToken && hash) {
+      const params = new URLSearchParams(hash.replace('#', '?'));
+      accessToken = params.get('access_token');
+      localStorage.setItem('spotifyAccessToken', accessToken);
+    }
+
+    if (!accessToken) {
+      window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
+    } else {
+      renderLikedSongs();
+      fetchRandomSong();
+    }
+  }
+
+  handleAuth();
+
+  // Initialize Hammer.js for swipe gestures
+  const hammer = new Hammer(songCard);
+  hammer.on('swipe', handleSwipe);
+});
