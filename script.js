@@ -102,9 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     songCard.style.display = 'block';
   });
 
-  likeButton.addEventListener('click', likeSong);
-  dislikeButton.addEventListener('click', dislikeSong);
-
   function handleAuth() {
     const hash = window.location.hash;
     if (!accessToken && hash) {
