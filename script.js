@@ -63,4 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     likedSongs.push(currentSong);
     localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
     addLikedSong(currentSong);
-   
+    fetchRandomSong();
+  }
+
+  function addLikedSong(song
