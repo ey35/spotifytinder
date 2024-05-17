@@ -122,6 +122,36 @@ body {
 }
 
 /* Adjust the positioning of the Liked Songs button */
+/* Add animation for like and dislike buttons */
+#like-button {
+  animation: swipeRight 0.3s ease;
+}
+
+#dislike-button {
+  animation: swipeLeft 0.3s ease;
+}
+
+@keyframes swipeRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+/* Adjust the positioning of the Liked Songs button */
 #view-liked-songs {
   position: absolute;
   top: 20px; /* Adjust as needed */
@@ -139,6 +169,3 @@ body {
 #view-liked-songs:hover {
   background-color: #1aa34a;
 }
-
-
-
