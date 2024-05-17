@@ -118,3 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!accessToken) {
+      window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
+    } else {
+      renderLikedSongs();
+      fetchRandomSong();
+    }
+  }
+
+  handleAuth();
+
+  // Initialize Hammer.js for swipe gestures
+  const hammer = new Hammer(songCard);
+  hammer.on('swipe', handleSwipe);
+});
