@@ -1,22 +1,9 @@
-// JavaScript code for Spotify login
 document.addEventListener('DOMContentLoaded', () => {
   const CLIENT_ID = '32e9e5d5c4d74bf98e34f5e240070726'; // Your Spotify client ID
   const REDIRECT_URI = window.location.href; // Redirect URI
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
   const RESPONSE_TYPE = 'token';
   const SCOPES = 'user-library-read';
-
-  // Function to initiate Spotify login
-  function handleLogin() {
-    const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
-    window.location.href = authUrl;
-  }
-
-  // Add event listener to the login button
-  const loginButton = document.getElementById('login-button');
-  loginButton.addEventListener('click', handleLogin);
-});
-
 
   const songNameElement = document.getElementById('song-name');
   const songArtistElement = document.getElementById('song-artist');
@@ -36,28 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentAudio = new Audio(); // Initialize the audio element
 
-  function renderLikedSongs() {
-    likedSongsList.innerHTML = '';
-    likedSongs.forEach(song => {
-      const listItem = document.createElement('li');
-      const img = document.createElement('img');
-      img.src = song.art;
-      listItem.appendChild(img);
-      const songInfo = document.createElement('div');
-      songInfo.classList.add('song-info');
-      songInfo.innerHTML = `<p>${song.name} by ${song.artist}</p>`;
-      const favoriteButton = document.createElement('button');
-      favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
-      favoriteButton.classList.add('btn', 'favorite');
-      favoriteButton.addEventListener('click', () => {
-        favoriteButton.classList.toggle('active');
-      });
-      songInfo.appendChild(favoriteButton);
-      listItem.appendChild(songInfo);
-      likedSongsList.appendChild(listItem);
-    });
+  // Function to initiate Spotify login
+  function handleLogin() {
+    const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
+    window.location.href = authUrl;
   }
 
+  // Function to fetch a random song from Spotify
   async function fetchRandomSong() {
     try {
       const response = await fetch('https://api.spotify.com/v1/recommendations?seed_genres=pop', {
@@ -85,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Function to play audio
   function playAudio(url) {
     if (currentAudio.src !== url) {
       currentAudio.pause(); // Pause the current audio
@@ -95,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Function to handle liking a song
   function likeSong() {
     likedSongs.push(currentSong);
     localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
@@ -102,20 +76,35 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchRandomSong();
   }
 
+  // Function to handle disliking a song
   function dislikeSong() {
     fetchRandomSong();
   }
 
-  viewLikedSongsButton.addEventListener('click', () => {
-    likedSongsContainer.style.display = 'block';
-    songCard.style.display = 'none';
-  });
+  // Function to render liked songs
+  function renderLikedSongs() {
+    likedSongsList.innerHTML = '';
+    likedSongs.forEach(song => {
+      const listItem = document.createElement('li');
+      const img = document.createElement('img');
+      img.src = song.art;
+      listItem.appendChild(img);
+      const songInfo = document.createElement('div');
+      songInfo.classList.add('song-info');
+      songInfo.innerHTML = `<p>${song.name} by ${song.artist}</p>`;
+      const favoriteButton = document.createElement('button');
+      favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
+      favoriteButton.classList.add('btn', 'favorite');
+      favoriteButton.addEventListener('click', () => {
+        favoriteButton.classList.toggle('active');
+      });
+      songInfo.appendChild(favoriteButton);
+      listItem.appendChild(songInfo);
+      likedSongsList.appendChild(listItem);
+    });
+  }
 
-  backButton.addEventListener('click', () => {
-    likedSongsContainer.style.display = 'none';
-    songCard.style.display = 'block';
-  });
-
+  // Function to handle authentication
   function handleAuth() {
     const hash = window.location.hash;
     if (!accessToken && hash) {
@@ -127,12 +116,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!accessToken) {
-      window.location.href = `${AUTH_ENDPOINT}?client_id=${clientId}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
+      handleLogin();
     } else {
       renderLikedSongs();
       fetchRandomSong();
     }
   }
 
+  // Event listeners for like and dislike buttons
+  likeButton.addEventListener('click', likeSong);
+  dislikeButton.addEventListener('click', dislikeSong);
+
+  // Event listener for viewing liked songs
+  viewLikedSongsButton.addEventListener('click', () => {
+    likedSongsContainer.style.display = 'block';
+    songCard.style.display = 'none';
+  });
+
+  // Event listener for going back from liked songs view
+  backButton.addEventListener('click', () => {
+    likedSongsContainer.style.display = 'none';
+    songCard.style.display = 'block';
+  });
+
+  // Call handleAuth function on page load
   handleAuth();
 });
