@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     songCard.classList.add('animated');
   }
 
- function addLikedSong(song) {
+function addLikedSong(song) {
   const listItem = document.createElement('li');
   const img = document.createElement('img');
   img.src = song.art;
@@ -100,6 +100,58 @@ document.addEventListener('DOMContentLoaded', () => {
   listItem.appendChild(songInfo);
   likedSongsList.appendChild(listItem);
 }
+
+async function fetchRandomSong() {
+  try {
+    const response = await fetch('https://api.spotify.com/v1/recommendations?seed_genres=pop', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    const data = await response.json();
+    const tracks = data.tracks;
+    const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+    currentSong = {
+      name: randomTrack.name,
+      artist: randomTrack.artists[0].name,
+      art: randomTrack.album.images[0].url,
+      spotifyId: randomTrack.id,
+      preview_url: randomTrack.preview_url
+    };
+    songNameElement.textContent = currentSong.name;
+    songArtistElement.textContent = currentSong.artist;
+    songArtElement.src = currentSong.art;
+    songCard.style.transform = 'translateX(0)';
+    songCard.style.opacity = '1';
+    playAudio(currentSong.preview_url);
+  } catch (error) {
+    console.error('Error fetching song:', error);
+    alert('Error fetching song. Please try again.');
+  }
+}
+
+function playAudio(url) {
+  const audio = new Audio(url);
+  audio.play();
+}
+
+function likeSong() {
+  likedSongs.push(currentSong);
+  localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+  addLikedSong(currentSong);
+  fetchRandomSong();
+  songCard.classList.add('animated');
+}
+
+function dislikeSong() {
+  fetchRandomSong();
+  songCard.classList.add('animated');
+}
+
+// Remove animation class after animation ends
+songCard.addEventListener('animationend', () => {
+  songCard.classList.remove('animated');
+});
 
   function handleSwipe(event) {
     if (event.direction === 4) { // Swipe right
