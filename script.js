@@ -84,25 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let currentAudio = null; // Track the currently playing audio
 
-function addLikedSong(song) {
-  const listItem = document.createElement('li');
-  const img = document.createElement('img');
-  img.src = song.art;
-  listItem.appendChild(img);
-  const songInfo = document.createElement('div');
-  songInfo.classList.add('song-info');
-  songInfo.innerHTML = `<p>${song.name} by ${song.artist}</p>`;
-  const favoriteButton = document.createElement('button');
-  favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
-  favoriteButton.classList.add('btn', 'favorite');
-  favoriteButton.addEventListener('click', () => {
-    favoriteButton.classList.toggle('active');
-  });
-  songInfo.appendChild(favoriteButton);
-  listItem.appendChild(songInfo);
-  likedSongsList.appendChild(listItem);
-}
-
 async function fetchRandomSong() {
   try {
     const response = await fetch('https://api.spotify.com/v1/recommendations?seed_genres=pop', {
@@ -125,7 +106,11 @@ async function fetchRandomSong() {
     songArtElement.src = currentSong.art;
     songCard.style.transform = 'translateX(0)';
     songCard.style.opacity = '1';
-    playAudio(currentSong.preview_url);
+    if (currentSong.preview_url) {
+      playAudio(currentSong.preview_url);
+    } else {
+      console.warn('No preview available for this song.');
+    }
   } catch (error) {
     console.error('Error fetching song:', error);
     alert('Error fetching song. Please try again.');
@@ -137,7 +122,9 @@ function playAudio(url) {
     currentAudio.pause(); // Pause the current audio
   }
   currentAudio = new Audio(url);
-  currentAudio.play();
+  currentAudio.play().catch(error => {
+    console.error('Error playing audio:', error);
+  });
 }
 
 function likeSong() {
@@ -157,6 +144,7 @@ function dislikeSong() {
 songCard.addEventListener('animationend', () => {
   songCard.classList.remove('animated');
 });
+
 
 
   function handleSwipe(event) {
