@@ -82,6 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
     songCard.classList.add('animated');
   }
 
+let currentAudio = null; // Track the currently playing audio
+
 function addLikedSong(song) {
   const listItem = document.createElement('li');
   const img = document.createElement('img');
@@ -131,8 +133,11 @@ async function fetchRandomSong() {
 }
 
 function playAudio(url) {
-  const audio = new Audio(url);
-  audio.play();
+  if (currentAudio) {
+    currentAudio.pause(); // Pause the current audio
+  }
+  currentAudio = new Audio(url);
+  currentAudio.play();
 }
 
 function likeSong() {
@@ -152,6 +157,7 @@ function dislikeSong() {
 songCard.addEventListener('animationend', () => {
   songCard.classList.remove('animated');
 });
+
 
   function handleSwipe(event) {
     if (event.direction === 4) { // Swipe right
