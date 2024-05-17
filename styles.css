@@ -1,0 +1,62 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+  margin: 0;
+}
+
+.container {
+  width: 300px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.card {
+  padding: 20px;
+  text-align: center;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+#like-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#dislike-button {
+  background-color: #f44336;
+  color: white;
+}
+
+#liked-songs {
+  padding: 20px;
+  background-color: #fafafa;
+}
+
+#liked-songs h3 {
+  margin: 0 0 10px;
+}
+
+#liked-songs-list {
+  list-style: none;
+  padding: 0;
+}
+
+#liked-songs-list li {
+  padding: 5px 0;
+}
