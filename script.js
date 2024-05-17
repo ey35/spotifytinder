@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const CLIENT_ID = '32e9e5d5c4d74bf98e34f5e240070726';
   const REDIRECT_URI = window.location.href;
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
   const RESPONSE_TYPE = 'token';
@@ -19,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentSong = null;
   let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
   let accessToken = localStorage.getItem('spotifyAccessToken');
+  let clientId = localStorage.getItem('spotifyClientId');
 
   function renderLikedSongs() {
     likedSongsList.innerHTML = '';
@@ -27,7 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const img = document.createElement('img');
       img.src = song.art;
       listItem.appendChild(img);
-      listItem.appendChild(document.createTextNode(`${song.name} by ${song.artist}`));
+      const songInfo = document.createElement('div');
+      songInfo.classList.add('song-info');
+      songInfo.innerHTML = `<p>${song.name} by ${song.artist}</p>`;
+      const favoriteButton = document.createElement('button');
+      favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
+      favoriteButton.classList.add('btn', 'favorite');
+      songInfo.appendChild(favoriteButton);
+      listItem.appendChild(songInfo);
       likedSongsList.appendChild(listItem);
     });
   }
@@ -64,6 +71,12 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
     addLikedSong(currentSong);
     fetchRandomSong();
+    likeButton.classList.add('animated');
+  }
+
+  function dislikeSong() {
+    fetchRandomSong();
+    dislikeButton.classList.add('animated');
   }
 
   function addLikedSong(song) {
@@ -71,7 +84,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const img = document.createElement('img');
     img.src = song.art;
     listItem.appendChild(img);
-    listItem.appendChild(document.createTextNode(`${song.name} by ${song.artist}`));
+    const songInfo = document.createElement('div');
+    songInfo.classList.add('song-info');
+    songInfo.innerHTML = `<p>${song.name} by ${song.artist}</p>`;
+    const favoriteButton = document.createElement('button');
+    favoriteButton.innerHTML = '<i class="fas fa-star"></i> Favorite';
+    favoriteButton.classList.add('btn', 'favorite');
+    songInfo.appendChild(favoriteButton);
+    listItem.appendChild(songInfo);
     likedSongsList.appendChild(listItem);
   }
 
@@ -79,13 +99,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (event.direction === 4) { // Swipe right
       likeSong();
     } else if (event.direction === 2) { // Swipe left
-      fetchRandomSong();
+      dislikeSong();
     }
   }
 
   likeButton.addEventListener('click', likeSong);
 
-  dislikeButton.addEventListener('click', fetchRandomSong);
+  dislikeButton.addEventListener('click', dislikeSong);
 
   viewLikedSongsButton.addEventListener('click', () => {
     songCard.classList.add('hidden');
@@ -102,11 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!accessToken && hash) {
       const params = new URLSearchParams(hash.replace('#', '?'));
       accessToken = params.get('access_token');
+      clientId = params.get('client_id');
       localStorage.setItem('spotifyAccessToken', accessToken);
+      localStorage.setItem('spotifyClientId', clientId);
     }
 
     if (!accessToken) {
-      window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
+      window.location.href = `${AUTH_ENDPOINT}?client_id=${clientId}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
     } else {
       renderLikedSongs();
       fetchRandomSong();
@@ -118,4 +140,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Hammer.js for swipe gestures
   const hammer = new Hammer(songCard);
   hammer.on('swipe', handleSwipe);
+
+  // Remove animation class after animation ends
+  likeButton.addEventListener('animationend', () => {
+    likeButton.classList.remove('animated');
+  });
+
+  dislikeButton.addEventListener('animationend', () => {
+    dislikeButton.classList.remove('animated');
+  });
 });
