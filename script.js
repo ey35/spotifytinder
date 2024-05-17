@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const dislikeButton = document.getElementById('dislike-button');
   const likedSongsList = document.getElementById('liked-songs-list');
   const songCard = document.getElementById('song-card');
+  const likedSongsContainer = document.getElementById('liked-songs');
+  const viewLikedSongsButton = document.getElementById('view-liked-songs');
+  const backButton = document.getElementById('back-button');
 
   let currentSong = null;
   let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
@@ -96,6 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(fetchRandomSong, 300);
   });
 
+  viewLikedSongsButton.addEventListener('click', () => {
+    songCard.classList.add('hidden');
+    likedSongsContainer.style.display = 'block';
+  });
+
+  backButton.addEventListener('click', () => {
+    likedSongsContainer.style.display = 'none';
+    songCard.classList.remove('hidden');
+  });
+
   function handleAuth() {
     const hash = window.location.hash;
     if (!accessToken && hash) {
@@ -105,16 +118,3 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (!accessToken) {
-      window.location.href = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPES}`;
-    } else {
-      renderLikedSongs();
-      fetchRandomSong();
-    }
-  }
-
-  handleAuth();
-
-  // Initialize Hammer.js for swipe gestures
-  const hammer = new Hammer(songCard);
-  hammer.on('swipe', handleSwipe);
-});
