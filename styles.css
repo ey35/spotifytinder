@@ -202,21 +202,10 @@ body {
 
 /* Adjust the styling for the liked songs list container */
 #liked-songs-list {
-  overflow-y: auto; /* Enable vertical scrolling */
-  scrollbar-width: thin; /* Adjust scrollbar width */
-  scrollbar-color: #777 transparent; /* Adjust scrollbar color */
+  overflow: hidden; /* Hide overflow to remove scrollbars */
   display: flex; /* Ensure flexbox layout */
   flex-wrap: wrap; /* Allow items to wrap */
   justify-content: center; /* Center items horizontally */
-  align-items: flex-start; /* Align items to the top */
-}
-
-#liked-songs-list::-webkit-scrollbar {
-  width: 8px; /* Adjust scrollbar width for WebKit browsers */
-}
-
-#liked-songs-list::-webkit-scrollbar-thumb {
-  background-color: #777; /* Adjust scrollbar thumb color for WebKit browsers */
 }
 
 #liked-songs-list li {
