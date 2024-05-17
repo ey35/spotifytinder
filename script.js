@@ -60,6 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
     likedSongsList.appendChild(listItem);
   }
 
+  function handleSwipe(event) {
+    if (event.direction === 4) { // Swipe right
+      likeSong();
+    } else if (event.direction === 2) { // Swipe left
+      fetchRandomSong();
+    }
+  }
+
   likeButton.addEventListener('click', likeSong);
   dislikeButton.addEventListener('click', fetchRandomSong);
 
@@ -80,4 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   handleAuth();
+
+  // Initialize Hammer.js for swipe gestures
+  const songCard = document.getElementById('song-card');
+  const hammer = new Hammer(songCard);
+  hammer.on('swipe', handleSwipe);
 });
